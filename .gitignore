@@ -1,0 +1,6 @@
+.gatorconfig.json
+
+node_modules/
+
+# generated files
+./src/lib/db
