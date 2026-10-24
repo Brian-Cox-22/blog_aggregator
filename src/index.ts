@@ -1,10 +1,14 @@
-import { readConfig } from "./config";
-import { CommandsRegistry, handlerLogin, registerCommand, runCommand } from "./commands";
 
-function main() {
+import { CommandsRegistry, handlerLogin, registerCommand, runCommand } from "./commands";
+import { handlerGetUsers, handlerRegisterUser, handlerReset } from "./dbCommands";
+
+async function main() {
   const registry: CommandsRegistry = {};
 
   registerCommand(registry, "login", handlerLogin);
+  registerCommand(registry, "register", handlerRegisterUser);
+  registerCommand(registry, "reset", handlerReset);
+  registerCommand(registry, "users", handlerGetUsers);
   //console.log(`Registry: ${registry.login}`);
 
   //console.log(readConfig());
@@ -15,7 +19,10 @@ function main() {
   const argArray = args.slice(1);
   
   // run the command
-  runCommand(registry, commandName, ...argArray);
+  await runCommand(registry, commandName, ...argArray);
+  
+  // exit
+  process.exit(0)
 
 }
 
@@ -26,13 +33,6 @@ function cleanArgs() {
     console.log("Error: no commands detected");
     process.exit(1);
   }
-
-  /*
-  let outputArgs = [];
-  for (let arg of rawArgs){
-    outputArgs.push(arg.toLocaleLowerCase());
-  }
-    */
   
   return rawArgs;
 }
